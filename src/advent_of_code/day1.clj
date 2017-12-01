@@ -22,7 +22,7 @@
   (let [[l1 l2] (split-at n s)]
     (concat l2 l1))) 
 
-(defn day1-a
+(defn day1-2
   [seq]
   (->>
    (map vector seq (circle-2 seq (/ (count seq) 2))) ;; zip -> [1 2 2 3 4] -> ([1 2] [2 2] [2 3] [3 4] [4 1])
@@ -52,4 +52,4 @@
 
 
 (day1 (digits input)) ;; => 1150
-(day1-a (digits input))
+(day1-2 (digits input))
