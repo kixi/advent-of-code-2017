@@ -11,7 +11,7 @@
   (->>
    (map vector seq (circle seq)) ;; zip -> [1 2 2 3 4] -> ([1 2] [2 2] [2 3] [3 4] [4 1])
    (filter (fn [[x y]] (= x y))) ;; only elements which are same: e.g. include [1 1]
-   (map (fn [[x y]] x)) ;; take the first of the two [1 1] -> 1
+   (map first) ;; take the first of the two [1 1] -> 1
    (reduce +))) ;; sum up
 
 (defn digits
