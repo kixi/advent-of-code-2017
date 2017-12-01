@@ -1,21 +1,25 @@
 (ns advent-of-code.day1
   (:require [clojure.test :refer [is]]))
 
-(def s [1 1 1 1])
-
-(defn circle [s]
+(defn circle
+  "rotates a seq by 1 element [1 2 3 4] -> [4 1 2 3]"
+  [s]
   (conj (vec (rest s)) (first s)))
 
-(defn day1 [seq]
+(defn day1
+  [seq]
   (->>
-   (map vector seq (circle seq))
-   (filter (fn [[x y]] (= x y)))
-   (map (fn [[x y]] x))
-   (reduce +)))
+   (map vector seq (circle seq)) ;; zip -> [1 2 2 3 4] -> ([1 2] [2 2] [2 3] [3 4] [4 1])
+   (filter (fn [[x y]] (= x y))) ;; only elements which are same: e.g. include [1 1]
+   (map (fn [[x y]] x)) ;; take the first of the two [1 1] -> 1
+   (reduce +))) ;; sum up
 
-(defn digits [string]
+(defn digits
+  "converts a string of digits into a seqence of digits"
+  [string]
   (map #(- (int %) (int \0)) (seq string)))
 
+;; just some tests
 (is (= 3 (day1 [1 1 2 2])))
 (is (= 4 (day1 [1 1 1 1])))
 (is (= 0 (day1 [1 2 3 4])))
