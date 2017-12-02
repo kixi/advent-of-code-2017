@@ -41,5 +41,4 @@
    (filter (comp not nil?))
    (first)))
 
-(checkrow [4 2 4 3])
 (reduce + (map checkrow grid))
