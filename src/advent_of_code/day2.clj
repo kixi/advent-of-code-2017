@@ -15,10 +15,7 @@
 
 ;; part 1
 (defn diff [vec]
-  (let [smallest (reduce (fn [a x] (if (< a x) a x)) vec)
-        largest (reduce (fn [a x] (if (> a x) a x)) vec)
-        ]
-    (- largest smallest)))
+  (- (apply max vec) (apply min vec)))
 
 ;; solution:
 (reduce + (map diff grid)) ;; => 39126
