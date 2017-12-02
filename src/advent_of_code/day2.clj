@@ -27,7 +27,6 @@
          y xs
          :when (and (not= x y) (= (mod x y) 0))]
        (/ x y))
-   (filter (comp not nil?))
    (first)))
 
 ;; solution
