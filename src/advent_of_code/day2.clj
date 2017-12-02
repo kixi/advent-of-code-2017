@@ -1,8 +1,6 @@
 (ns advent-of-code.day2
 (:require [clojure.test :refer [is deftest]]))
 
-(+ 4 5)
-
 (defn diff [vec]
   (let [smallest (reduce (fn [a x] (if (< a x) a x)) vec)
         largest (reduce (fn [a x] (if (> a x) a x)) vec)
@@ -32,12 +30,14 @@
 
 (reduce + (map diff grid))
 
-(defn checkrow [v]
+;; Part 2
+
+(defn checkrow [xs]
   (->> 
-   (for [x v y v]
-     (if (and (not= x y) (= (mod x y) 0))
+   (for [x xs
+         y xs
+         :when (and (not= x y) (= (mod x y) 0))]
        (/ x y))
-     )
    (filter (comp not nil?))
    (first)))
 
