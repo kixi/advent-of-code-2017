@@ -1,6 +1,6 @@
 # advent-of-code
 
-My solutions to (Advent of Code 2017)[http://adventofcode.com/]
+My solutions to [Advent of Code 2017](http://adventofcode.com/)
 
 
 ## License
