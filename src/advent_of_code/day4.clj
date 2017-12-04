@@ -6,9 +6,7 @@
   (str/split line #"\s"))
 
 (defn valid-passphrase? [line]
-  (let [ws (words line)]
-    ;; discover duplicates (number of elements in list does not equal to number of elements in set)
-    (= (count ws) (count (set ws)))))
+    (apply distinct? (words line)))
 
 (def input (slurp "src/advent_of_code/input-day4.txt"))
 
@@ -21,8 +19,7 @@
 (defn valid-passphrase-anagram? [line]
   ;; sort each word -> anagrams are same sorted word
   (let [ws (map sort (words line))]
-    (= (count ws) (count (set ws))))
-  )
+    (apply distinct? ws)))
 
 (->> 
  (str/split-lines input)
