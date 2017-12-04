@@ -14,8 +14,7 @@
 
 (->> 
  (str/split-lines input)
- (map valid-passphrase?)
- (filter true?)
+ (filter valid-passphrase?)
  count)
 
 ;; part 2
@@ -27,6 +26,5 @@
 
 (->> 
  (str/split-lines input)
- (map valid-passphrase-anagram?)
- (filter true?)
+ (filter valid-passphrase-anagram?)
  count)
