@@ -1,8 +1,7 @@
 (ns advent-of-code.day7
-(:require [clojure.test :refer [is deftest]]
-          [clojure.string :as str]
-          [clojure.set :as set]))
-
+  (:require [clojure.test :refer [is deftest]]
+            [clojure.string :as str]
+            [clojure.set :as set]))
 
 (def names "cfkcj (74)
 kmwhbm (32)
@@ -1058,13 +1057,13 @@ ttvyvv (26)")
   cntj (57)")
 
 (def tree-lines
-  (->> inp
+  (->> names
        str/split-lines
        (map #(read-string (str "[" % "]")))
        (map (fn [elem]
-              {(keyword (first elem)) {
-                                       :count (first (second elem))
-                                       :children (drop 3 elem)}}))))
+              {:name (first elem)
+               :weight (first (second elem))
+               :children (drop 3 elem)}))))
 
 (defn all-children [tree-lines]
   (mapcat (fn [{:keys [children]}] children) tree-lines))
@@ -1073,15 +1072,49 @@ ttvyvv (26)")
   (map (fn [{:keys [name]}] name) tree-lines))
 (all-children tree-lines)
 (all-nodes tree-lines)
+(defn find-root [tree-lines]
+  (set/difference (set (all-nodes tree-lines)) (set (all-children tree-lines))))
 
-(set/difference (set (all-nodes tree-lines)) (set (all-children tree-lines)))
+(find-root tree-lines)
+(defn map-treelist [treelist]
+  (apply merge (map (fn [elem]
+                      {(keyword (:name elem)) {:weight (:weight elem)
+                                               :children (map keyword (:children elem))}})
+                    treelist)))
 
-(defn build-tree [tree-list]
-  (clojure.pprint/pprint tree-list)
-  (reduce tree-list
-          (fn [tl elem]
-            )
-          tree-list)
-  )
+(map-treelist tree-lines)
 
-(build-tree tree-lines)
+(defn build-tree [tree-list root]
+  (let [root-elem {root (root tree-list)}]
+    (if (seq? (:children (root root-elem)))
+      (do
+        (println root-elem)
+        (let [e
+              (assoc-in root-elem  [root :children]
+                        (apply merge (map (fn [id] (build-tree tree-list id))
+                                          (:children (root root-elem)))))]
+          (println "E " e)
+          e))
+      root-elem)))
+
+(def tree (build-tree (map-treelist  tree-lines) :bsfpjtc))
+
+(defn sum-up [tree]
+  (apply + (map (fn [e]
+                  (if (:children e)
+                    (+ (:weight e) (sum-up (:children e)))
+                    (:weight e))) (vals tree))))
+
+(sum-up tree)
+(defn rec [tree]
+  (let [v (vals tree)]
+    (map (fn [e]
+           (if (:children e)
+             (let [s (sum-up (:children e))]
+               [[(+ s (:weight e)) (:weight e) s] (rec (:children e))])
+             [(:weight e) (:weight e) 0]))
+         v)))
+
+
+(clojure.pprint/pprint (rec tree))
+
