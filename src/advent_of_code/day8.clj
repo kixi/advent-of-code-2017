@@ -21,39 +21,40 @@
          'dec '-})
 
 (defn command [c]
-  (or (get command-map c) c))
+  (get command-map c c))
 
 (defn my-eval [[var1 cmd val1 i var2 cmp val2] env]
-  (let [val-var2 (or (get env var2) 0)
+  (let [val-var2 (get env var2 0)
         form1 (list (command cmp) val-var2 val2)]
     (if (eval form1)
-      (let [form2 (list (command cmd)  (or (get env var1) 0) val1)]
+      (let [form2 (list (command cmd)  (get env var1 0) val1)]
         (assoc env var1 (eval form2)))
       env)))
 
 (defn eval-prog [prog]
-  (reduce (fn [env prog-line]
-            (let [e (my-eval prog-line env)]
-              e))
-          {}
-          prog))
+  (->>
+   (reduce (fn [env prog-line]
+             (my-eval prog-line env))
+           {}
+           prog)
+   vals
+   (apply max)))
 
-(def env (eval-prog prog))
+;; part 1
+(eval-prog prog)
 
-(defn max-env [env]
-  (if (empty? env)
-    Integer/MIN_VALUE
-    (apply max (vals env))))
 
-(max-env env)
+(defn eval-prog2 [prog]
+  (->>
+   (reductions (fn [env prog-line]
+                 (my-eval prog-line env))
+               {}
+               prog)
+   (map vals)
+   (keep identity)
+   (map (partial apply max))
+   (apply max)
+   ))
 
-;; part-2
-(defn eval-prog-max [prog]
-  (reduce (fn [[max env] prog-line]
-            (let [e (my-eval prog-line env)
-                  maxe (max-env e)]
-              [(if (> maxe max) maxe max) e]))
-          [Integer/MIN_VALUE {}]
-          prog))
+(eval-prog2 prog)
 
-(first (eval-prog-max prog))
