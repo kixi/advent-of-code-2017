@@ -3,7 +3,6 @@
             [clojure.string :as str]
             [clojure.set :as set]))
 
-
 (def input (slurp "src/advent_of_code/input-day9.txt"))
 
 (defn parse [input]
@@ -41,4 +40,3 @@
           stream))
 
 (parse-groups (:stream (parse input )))
-
