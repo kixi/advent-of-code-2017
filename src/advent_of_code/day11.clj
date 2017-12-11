@@ -9,7 +9,6 @@
 (def directions {"n" [0 1]
                  "s" [0 -1]
                  "ne" [1 0]
-                 "ne" [1 0]
                  "sw" [-1 0]
                  "nw" [-1 1]
                  "se" [1 -1]})
@@ -20,27 +19,24 @@
        (map str/trim)
        (map directions)))
 
-;; (frequencies (parse-input input))
+(defn move [[xa ya] [x y]]
+             [(+ xa x) (+ ya y)])
 
-(defn move [input-directions]
-  (reduce (fn [[xa ya] [x y]]
-            [(+ xa x) (+ ya y)])
+(defn move-many [input-directions]
+  (reduce move
           [0 0]
           input-directions))
-
-;; (move (parse-input input))
 
 (defn distance-center [[x y]]
    (max x y))
 
-(distance-center (move (parse-input input)))
+(distance-center (move-many (parse-input input)))
 
 ;; part 2
 
 (defn max-distance [input-directions]
   (->>
-   (reductions (fn [[xa ya] [x y]]
-                 [(+ xa x) (+ ya y)])
+   (reductions move
                [0 0]
                input-directions)
    (map distance-center)
