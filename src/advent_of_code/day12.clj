@@ -43,15 +43,3 @@
                  distinct))
 
 (count groups)
-
-
-(apply join-group (take 2 groups))
-
-(defn join-group [g1 g2]
-  (if (seq (set/intersection g1 g2))
-    (set/union g1 g2)
-    )
-
-            )
-
-(seq (set/intersection #{1} #{2}))
