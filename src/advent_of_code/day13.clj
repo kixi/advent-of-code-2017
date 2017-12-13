@@ -41,6 +41,6 @@
 
 (defn part-2 []
   (->> (range)
-       (map #(caught-in-firewall? % input))
-       (take-while identity)
+       (take-while #(caught-in-firewall? % input))
        count))
+
