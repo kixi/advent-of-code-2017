@@ -10,33 +10,37 @@
                 (map #(str "[" (str/replace % #":" "") "]"))
                 (map read-string)))
 
-(defn position [pdepth t]
-  (let [depth (dec pdepth)]
-    (if (even? (quot t depth))
-      (mod t depth)
-      (- depth (mod t depth)))))
+(defn position [range t]
+  (let [r (dec range)]
+    (if (even? (quot t r))
+      (mod t r)
+      (- r (mod t r)))))
 
-(defn severity [delay [layer depth]]
-  (if (= (position depth (+ layer delay)) 0)
-    (* layer depth)
-    0))
+(defn caught? [t range]
+  (zero? (position range t)))
 
-(defn total-severity [delay input]
-  (->> (map (partial severity delay) input)
-       (apply +)))
+(defn severity [depth range]
+  (* depth range))
+
+(defn total-severity [layers]
+  (->>
+   layers
+   (filter (partial apply caught?))
+   (map (partial apply severity))
+   (apply +)))
 
 ;; part 1
-(total-severity 0 input)
+;;(total-severity input)
 
-(defn caught-at [delay [layer depth]]
-  (if (= (position depth (+ layer delay)) 0)
-    layer))
+(defn caught-in-firewall? [delay input]
+  (reduce (fn [_ [depth range]]
+            (when-let [c (caught? (+ depth delay) range)]
+              (reduced c)))
+          nil
+          input))
 
-(defn all-layers [delay input]
-  (keep (partial caught-at delay) input))
-
-
-(->> (iterate inc 0)
-(map #(all-layers % input))
-(take-while (comp not  empty?))
-count)
+(defn part-2 []
+  (->> (range)
+       (map #(caught-in-firewall? % input))
+       (take-while identity)
+       count))
