@@ -78,8 +78,6 @@
       (do (println env)
         env))))
 
-
-
 (defn run []
   (let [queue1 (async/chan 10000)
         queue2 (async/chan 10000)]

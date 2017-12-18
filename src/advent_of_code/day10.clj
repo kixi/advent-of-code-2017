@@ -29,7 +29,7 @@
   (let [hash (round input)]
     (* (first (:hash hash)) (second (:hash hash)))))
 
-(part-1)
+#_(part-1)
 
 (def input-str "183,0,31,146,254,240,223,150,2,206,161,1,255,232,199,88")
 
@@ -58,4 +58,4 @@
       dense-hash
       ))
 
-(hash-f input-str)
+#_(hash-f input-str)
