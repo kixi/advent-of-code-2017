@@ -39,7 +39,8 @@
 
 (defn forward [pos]
   (->
-   (assoc pos :pos (move (:pos pos) (:dir pos)))
+   pos
+   (update :pos move (:dir pos))
    (update :steps inc)))
 
 (defn turn [{:keys [pos dir] :as position}]
@@ -59,7 +60,6 @@
 (defn run
   [start-pos]
   (loop [pos start-pos]
-    (println pos (sym pos))
     (condp contains? (sym pos)
       #{\| \-} (recur (forward pos))
       #{\+} (recur (turn pos))
