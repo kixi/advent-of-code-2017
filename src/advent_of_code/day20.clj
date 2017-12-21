@@ -55,15 +55,14 @@
   (->> coords
        (map :p)
        (frequencies)
-       (filter (fn [[k v]] (> v 1)))
-       (map first)
-       set))
+       (filter #(> (second %) 1))
+       (map first)))
 
 (defn part-2 []
   (->
    (loop [c coords i 0]
      (let [cp (coll-positions c)
-           nc (filter #(not (cp (:p %))) c)]
+           nc (filter #(not (contains? cp (:p %))) c)]
        (println (count nc))
        (if (< i 1000)
          (recur (next-iter-coords nc) (inc i))
