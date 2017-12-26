@@ -12,20 +12,20 @@
 9/10")
 
 (def components
-  (->>(slurp "src/advent_of_code/input-day24.txt") 
+  (->>
+  ;; input
+   (slurp "src/advent_of_code/input-day24.txt")
       (str/split-lines)
       (map #(str/split % #"/"))
       (mapv (partial mapv read-string))))
 
-components
-
 (defn dissoc-v [v pos]
   (vec (concat (subvec v 0 pos) (subvec v (inc pos)))))
-(dissoc-v [[2 2] [2 3] [9 10]] 1)
+
 (defn log [x]
   #_(println x)
   x)
-(defn build-tree [start-component components strength p id]
+(defn build-tree [start-component components strength p length]
   #_(println "build-tree" start-component components strength p id)
   (log 
    (->>(map-indexed (fn [idx c]
@@ -36,18 +36,19 @@ components
                                         (dissoc-v components idx)
                                         (+ strength (apply + c))
                                         (conj p c)
-                                        (inc id))
+                                        (inc length))
                             (= (second start-component) (second c))
                             (build-tree [(second c) (first c)]
                                         (dissoc-v components idx)
                                         (+ strength (apply + c))
                                         (conj p c)
-                                        (inc id))
+                                        (inc length))
                             :else
-                            strength
+                            (+ (* length 10000000) strength)
                             ))) components)
-       (apply (partial max 0))))
-  )
+       (apply (partial max 0)))))
 
 (def t (build-tree [0 0] components 0 [] 0))
+
 t
+
